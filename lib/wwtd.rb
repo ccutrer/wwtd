@@ -74,9 +74,16 @@ module WWTD
 
     private
 
+    def filter_env(env)
+      env.reject do |k, _v|
+        ENV.key?(k)
+      end
+    end
+
     # internal api
     def sh(env, cmd=nil)
       cmd, env = env, {} unless cmd
+      env = filter_env(env)
       env = escaped_env(env)
       puts cmd
       system("#{env}#{cmd}")

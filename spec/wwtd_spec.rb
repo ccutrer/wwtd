@@ -107,6 +107,11 @@ describe WWTD do
       wwtd("").should include "111\n"
     end
 
+    it "propagates interrupts" do
+      write ".travis.yml", "script: exit 130"
+      wwtd("", :fail => true).should include "Interrupt"
+    end
+
     context "with a script array" do
       it "runs all" do
         write "Rakefile", "task(:foo){ puts 111 }\ntask(:bar){ puts 222 }"

@@ -79,7 +79,10 @@ module WWTD
       cmd, env = env, {} unless cmd
       env = escaped_env(env)
       puts cmd
-      system("#{env}#{cmd}")
+      result = system("#{env}#{cmd}")
+      # detect Ctrl-C in sub-processes; see http://tldp.org/LDP/abs/html/exitcodes.html
+      raise Interrupt if $?.exitstatus == 128 + Signal.list['INT']
+      result
     end
 
     def with_clean_dot_bundle
